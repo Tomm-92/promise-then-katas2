@@ -26,9 +26,13 @@ fetch("joke", "question").then(<insert your callback function>)
 // the data - expected return value "Cheese" of type String
 
 const food = async () => {
-  const response = await fetch("food");
-  return response.data;
+const response = await fetch("food");
+return response.data;
 };
+
+/*
+const food = () => fetch("food").then(({ data }) => data);
+*/
 
 // 2 Create a function that uses the fetch function to make a request to the "cats" URL and returns
 // a list of cats in alphabetical order - expected return value ["Bandit", "Berry", "Puss in boots", "Smokey"] of type Array
@@ -38,6 +42,8 @@ const cat = async () => {
   console.log(response);
   return response.data.cats.sort();
 };
+
+/* const cat = () => fetch("cats").then(({ data }) => data.cats.sort()); */
 
 // 3 Create a function that uses the fetch function to make a request to the "dogs" URL and returns
 // the naughtiest dog - expected return value {name: "Mutley", naughty: 10} of type Object
@@ -50,12 +56,11 @@ const cat = async () => {
 }; */
 
 const dog = async () => {
-  const response = await fetch("dogs", {});
+  const response = await fetch("dogs");
   const naughtyDog = response.data.dogs.reduce(
     (mostNaughty, dog) => {
       return dog.naughty > mostNaughty.naughty ? dog : mostNaughty;
-    },
-    { naughty: 0 }
+    }
   );
   return naughtyDog;
 };
@@ -70,7 +75,13 @@ const dog = async () => {
 // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/all
 //
 
-const joke = () => {};
+const joke = () => Promise.all([
+  fetch("jokes", "question"),
+  fetch("jokes", "answer")
+]).then(([one, two]) => {
+  return { question: one.joke, answer: two.answer };
+});
+
 
 module.exports = {
   food,
